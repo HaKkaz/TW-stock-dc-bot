@@ -1,0 +1,60 @@
+# .gitignore
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment files
+.env
+.venv/
+env/
+venv/
+ENV/
+*tar
+
+# PyBuilder
+target/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+*.so
+*.dylib
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# front_desk service data
+service_data/
+.env.filtered
+
+# Custom
+src/test_*
