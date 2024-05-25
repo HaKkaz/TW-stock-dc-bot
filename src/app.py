@@ -52,6 +52,10 @@ async def ma31(ctx, stock_code: str, days: str):
         await ctx.send('days should be an integer')
         return
     
+    if stock_code not in twstock.codes:
+        await ctx.send('該股票不存在')
+        return
+
     stock = twstock.Stock(stock_code)
     ma_31 = stock.moving_average(
         data=stock.price, 
