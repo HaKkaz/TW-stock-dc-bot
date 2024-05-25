@@ -3,6 +3,8 @@ import os
 import twstock
 from dotenv import load_dotenv
 from discord.ext import commands
+from twstock import analytics
+import message
 
 # Load .env file
 load_dotenv(override=True)
@@ -14,31 +16,48 @@ DC_Channel_Id = int(os.getenv('DC_Channel_Id'))
 # Define the intents
 intents = discord.Intents.default()
 intents.message_content = True  # Enable the message content intent
-client = commands.Bot(command_prefix = "!", intents=intents)
+help_command = commands.DefaultHelpCommand(
+    no_category = 'Commands'
+)
+client = commands.Bot(
+    command_prefix = "!",
+    intents=intents,
+    help_command=help_command
+)
 
 # events
 @client.event
 async def on_ready():
     print('start bot successfully')
-    channel = client.get_channel(DC_Channel_Id)
-    print(DC_Channel_Id)
-    # if channel:
-    #     await channel.send('start bot successfully')
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content == 'hi':
-        print('Hello')
-        await message.channel.send('Hello')
-    await client.process_commands(message)
 
 @client.command()
-async def price(ctx, args):
-    stock = twstock.realtime.get(args)
-    print(stock)
-    await ctx.send(stock['info']['name'] + ' 目前價格: ' + stock['realtime']['latest_trade_price'])
+async def price(ctx, stock_code: str):
+    """ 
+     [stock_code]: 取得指定股票的即時價格
+    """
+    stock = twstock.realtime.get(stock_code)
+    if stock['success']:
+        await ctx.send(message.price_message(stock))
+    else:
+        await ctx.send('error: ' + stock['rtmessage'])
 
+@client.command()
+async def ma31(ctx, stock_code: str, days: str):
+    """ 
+    [stock_code] [days]: 取得指定股票的 31 日內指定天數的移動平均線
+    """
+    try:
+        int(days)
+    except ValueError:
+        await ctx.send('days should be an integer')
+        return
+    
+    stock = twstock.Stock(stock_code)
+    ma_31 = stock.moving_average(
+        data=stock.price, 
+        days=int(days)
+    )
+
+    await ctx.send(message.ma31(ma_31, days))
 
 client.run(DC_Token)
