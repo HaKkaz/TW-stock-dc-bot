@@ -64,4 +64,32 @@ async def ma31(ctx, stock_code: str, days: str):
 
     await ctx.send(message.ma31(ma_31, days))
 
+@client.command()
+async def best4Buy(ctx, stock_code: str):
+    """ 
+    [stock_code]: 查看指定股票是否正在最佳四大買點
+    """
+    if stock_code not in twstock.codes:
+        await ctx.send('該股票不存在')
+        return
+
+    stock = twstock.Stock(stock_code)
+    bfp = twstock.BestFourPoint(stock)
+    result = bfp.best_four_point_to_buy()
+    await ctx.send(f'{stock_code} {result}')
+
+@client.command()
+async def best4Sell(ctx, stock_code: str):
+    """ 
+    [stock_code]: 查看指定股票是否正在最佳四大賣點
+    """
+    if stock_code not in twstock.codes:
+        await ctx.send('該股票不存在')
+        return
+
+    stock = twstock.Stock(stock_code)
+    bfp = twstock.BestFourPoint(stock)
+    result = bfp.best_four_point_to_sell()
+    await ctx.send(f'{stock_code} {result}')
+
 client.run(DC_Token)
