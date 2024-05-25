@@ -8,7 +8,6 @@ load_dotenv(override=True)
 
 # Get the specific environment variable
 DC_Token = os.getenv('DC_Token')
-DC_Channel_Id = int(os.getenv('DC_Channel_Id'))
 
 # events
 @client.event
