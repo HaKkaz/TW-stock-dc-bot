@@ -58,3 +58,6 @@ service_data/
 
 # Custom
 src/test_*
+**/subscribe/**
+**/log
+**/src/testing*
