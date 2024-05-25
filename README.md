@@ -5,7 +5,7 @@
 ## Start the Bot
 ```
 python3 -m venv .venv
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
 cp .env.sample .env
 # put your dc bot token into .env file
