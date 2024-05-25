@@ -1,16 +1,15 @@
 import discord
-import asyncio
-from dotenv import load_dotenv
 import os
-from discord.ext import commands
 import twstock
+from dotenv import load_dotenv
+from discord.ext import commands
 
 # Load .env file
-load_dotenv()
+load_dotenv(override=True)
 
 # Get the specific environment variable
 DC_Token = os.getenv('DC_Token')
-DC_Channel_Id = 1155856598607085668
+DC_Channel_Id = int(os.getenv('DC_Channel_Id'))
 
 # Define the intents
 intents = discord.Intents.default()
@@ -22,9 +21,9 @@ client = commands.Bot(command_prefix = "!", intents=intents)
 async def on_ready():
     print('start bot successfully')
     channel = client.get_channel(DC_Channel_Id)
-    # print(DC_Channel_Id)
-    if channel:
-        await channel.send('start bot successfully')
+    print(DC_Channel_Id)
+    # if channel:
+    #     await channel.send('start bot successfully')
 
 @client.event
 async def on_message(message):
