@@ -9,7 +9,7 @@ help_command = commands.DefaultHelpCommand(
     no_category = 'Commands'
 )
 client = commands.Bot(
-    command_prefix = "!",
+    command_prefix = "$$",
     intents=intents,
     help_command=help_command
 )
