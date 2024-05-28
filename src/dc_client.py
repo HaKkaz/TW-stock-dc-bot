@@ -1,6 +1,13 @@
 import discord
 from discord.ext import commands
-from commands import price, ma31, best4Buy, best4Sell, subscribe
+from commands import (
+    price, 
+    ma31, 
+    best4Buy, 
+    best4Sell, 
+    subscribe, 
+    unsubscribe
+)
 
 # Define the intents
 intents = discord.Intents.default()
@@ -19,3 +26,4 @@ client.add_command(ma31)
 client.add_command(best4Buy)
 client.add_command(best4Sell)
 client.add_command(subscribe)
+client.add_command(unsubscribe)

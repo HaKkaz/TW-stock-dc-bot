@@ -98,3 +98,33 @@ async def subscribe(ctx):
     else:
         await ctx.send(f'Already subscribed.')
         logger.info(channel_log(ctx) + 'subscribe already subscribed')
+
+@commands.command()
+async def unsubscribe(ctx):
+    """
+    : 取消訂閱機器人的通知
+    """
+    folder_path = 'subscribe'
+    file_path = os.path.join(folder_path, 'subscriber.txt')
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as file:
+            file.write('')
+
+    with open(file_path, 'r') as file:
+        existing_ids = file.read().splitlines()
+    
+    channel_id: str = str(ctx.channel.id)
+    
+    if channel_id in existing_ids:
+        existing_ids.remove(channel_id)
+        with open(file_path, 'w') as file:
+            for id in existing_ids:
+                file.write(id + '\n')
+        await ctx.send(f'Unsubscribe successfully.')
+        logger.info(channel_log(ctx) + 'unsubscribe successfully')
+    else:
+        await ctx.send(f'Already unsubscribed.')
+        logger.info(channel_log(ctx) + 'unsubscribe already unsubscribed')
