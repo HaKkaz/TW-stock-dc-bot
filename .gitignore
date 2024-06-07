@@ -8,6 +8,7 @@ __pycache__/
 .ipynb_checkpoints
 
 # Environment files
+.DS_Store
 .env
 .venv/
 env/
@@ -57,7 +58,6 @@ service_data/
 .env.filtered
 
 # Custom
-src/test_*
 **/subscribe/**
 **/log
 **/src/testing*
