@@ -1,8 +1,8 @@
 import pytest
-import pytest_asyncio
 from unittest.mock import patch, AsyncMock, mock_open
 import commands
 import os
+
 
 # test price command
 @pytest.mark.asyncio
@@ -170,7 +170,7 @@ async def test_subscribe_command_already_subscribed(mock_exists, mock_open):
     ctx.send.assert_called_with('Already subscribed.')
     mock_open.assert_any_call(os.path.join('subscribe', 'subscriber.txt'), 'r')
 
-    
+
 # Test unsubscribe command
 @pytest.mark.asyncio
 @patch("builtins.open", new_callable=mock_open, read_data="12345\n67890\n")
@@ -190,15 +190,23 @@ async def test_unsubscribe_command_success(
 
 
 @pytest.mark.asyncio
-@patch("builtins.open", new_callable=mock_open, read_data="67890\n")
-@patch("os.path.exists", return_value=True)
+@patch("builtins.open", new_callable=mock_open)
+@patch("os.path.exists", side_effect=lambda path: path !=
+       os.path.join('subscribe', 'subscriber.txt') and path != 'subscribe')
+@patch("os.makedirs")
 async def test_unsubscribe_command_not_subscribed(
-    mock_exists, mock_open
+    mock_makedirs, mock_exists, mock_open
 ):
     ctx = AsyncMock()
     ctx.send = AsyncMock()
     ctx.channel.id = 12345
 
     await commands.unsubscribe(ctx)
-    ctx.send.assert_called_with('Already unsubscribed.')
+
+    mock_makedirs.assert_called_once_with('subscribe')
+
+    # check that the file is created with empty subscription
+    mock_open.assert_any_call(os.path.join('subscribe', 'subscriber.txt'), 'w')
+    mock_open().write.assert_any_call('')
     mock_open.assert_any_call(os.path.join('subscribe', 'subscriber.txt'), 'r')
+    ctx.send.assert_called_with('Already unsubscribed.')
