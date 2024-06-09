@@ -61,4 +61,4 @@ src/test_*
 **/subscribe/**
 **/log
 **/src/testing*
-**/DS_Store
+**/.DS_Store
