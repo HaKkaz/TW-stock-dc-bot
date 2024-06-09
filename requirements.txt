@@ -4,3 +4,5 @@ twstock==1.4.0
 python-dotenv==1.0.1
 pytest
 python-afl
+pytest-asyncio 
+hypothesis
