@@ -191,8 +191,10 @@ async def test_unsubscribe_command_success(
 
 @pytest.mark.asyncio
 @patch("builtins.open", new_callable=mock_open)
-@patch("os.path.exists", side_effect=lambda path: path !=
-       os.path.join('subscribe', 'subscriber.txt') and path != 'subscribe')
+@patch("os.path.exists", side_effect=lambda path: (
+    path != os.path.join('subscribe', 'subscriber.txt')
+    and path != 'subscribe'
+))
 @patch("os.makedirs")
 async def test_unsubscribe_command_not_subscribed(
     mock_makedirs, mock_exists, mock_open

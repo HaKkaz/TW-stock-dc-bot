@@ -224,7 +224,7 @@ async def test_subscribe_create_folder_and_file(
     # Mock return values for os.path.exists
     mock_exists.side_effect = lambda x: False if x in [
         'subscribe', os.path.join('subscribe', 'subscriber.txt')
-        ] else True
+    ] else True
 
     await commands.subscribe(ctx)
 
@@ -327,7 +327,7 @@ async def test_unsubscribe_create_folder_and_file(
     # Mock return values for os.path.exists
     mock_exists.side_effect = lambda x: False if x in [
         'subscribe', os.path.join('subscribe', 'subscriber.txt')
-        ] else True
+    ] else True
 
     await commands.unsubscribe(ctx)
 
