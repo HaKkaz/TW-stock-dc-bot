@@ -7,4 +7,5 @@ pytest==8.2.2
 python-afl
 pytest-asyncio 
 hypothesis
+flake8
 
