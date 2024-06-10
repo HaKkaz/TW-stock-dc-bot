@@ -2,5 +2,9 @@ lxml==5.2.2
 discord.py==2.3.2
 twstock==1.4.0
 python-dotenv==1.0.1
-pytest==8.2.2
 pytest-asyncio==0.23.7
+pytest==8.2.2
+python-afl
+pytest-asyncio 
+hypothesis
+flake8
