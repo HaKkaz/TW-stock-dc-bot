@@ -1,8 +1,7 @@
-import pytest
 from unittest.mock import patch, Mock
 import logger
-import os
 import importlib
+
 
 def test_channel_log():
     mock_ctx = Mock()
@@ -15,14 +14,13 @@ def test_channel_log():
 
 def test_logger_setup():
     with patch('os.path.exists', return_value=False), \
-        patch('os.makedirs') as mock_makedirs, \
-        patch('logging.FileHandler') as mock_file_handler:
-        
+            patch('os.makedirs') as mock_makedirs, \
+            patch('logging.FileHandler') as mock_file_handler:
         importlib.reload(logger)
-        
-        mock_makedirs.assert_called_once_with('log')
-        mock_file_handler.assert_called_once_with(
-            filename='log/discord.log',
-            encoding='utf-8',
-            mode='a'
-        )
+
+    mock_makedirs.assert_called_once_with('log')
+    mock_file_handler.assert_called_once_with(
+        filename='log/discord.log',
+        encoding='utf-8',
+        mode='a'
+    )

@@ -1,13 +1,11 @@
 #! /usr/bin/python3
-from unittest.mock import patch, AsyncMock, mock_open
+from unittest.mock import AsyncMock
 import afl
 import sys
 import asyncio
-import pytest
 import os
-from hypothesis import given
-from hypothesis.strategies import text
 from commands import price, ma31, best4Buy, best4Sell
+
 
 async def test_price(data):
     # 模擬 Discord 的 ctx
@@ -21,8 +19,9 @@ async def test_price(data):
         # print error
         print("error")
         exit(1)
-    
+
     return
+
 
 async def test_best4buy(data):
 
@@ -37,6 +36,7 @@ async def test_best4buy(data):
         print("error")
         exit(1)
 
+
 async def test_best4Sell(data):
 
     # 模擬 Discord 的 ctx
@@ -50,6 +50,7 @@ async def test_best4Sell(data):
         print("error")
         exit(1)
 
+
 async def test_ma31(data):
 
     # 模擬 Discord 的 ctx
@@ -62,6 +63,7 @@ async def test_ma31(data):
         # print error
         print("error")
         exit(1)
+
 
 if __name__ == "__main__":
     afl.init()

@@ -9,6 +9,7 @@ load_dotenv(override=True)
 # Get the specific environment variable
 DC_Token = os.getenv('DC_Token')
 
+
 # events
 @client.event
 async def on_ready():
