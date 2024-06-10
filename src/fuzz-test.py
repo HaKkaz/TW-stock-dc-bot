@@ -1,20 +1,73 @@
+#! /usr/bin/python3
+from unittest.mock import patch, AsyncMock, mock_open
 import afl
 import sys
 import asyncio
 import pytest
+import os
 from hypothesis import given
 from hypothesis.strategies import text
-from commands import price, ma31
+from commands import price, ma31, best4Buy, best4Sell
 
-@pytest.mark.asyncio
-@given(text())
-async def test_fuzz(data):
+async def test_price(data):
+    # 模擬 Discord 的 ctx
     try:
-        # Call your function with the fuzzed input
-        await price(data)
-        await ma31(data, '10')
+        ctx = AsyncMock()
+        ctx.send = AsyncMock()
+        await price(ctx, data)
+        print("success")
+
     except Exception:
-        pass
+        # print error
+        print("error")
+        exit(1)
+    
+    return
+
+async def test_best4buy(data):
+
+    # 模擬 Discord 的 ctx
+    try:
+        ctx = AsyncMock()
+        ctx.send = AsyncMock()
+        await best4Buy(ctx, data)
+
+    except Exception:
+        # print error
+        print("error")
+        exit(1)
+
+async def test_best4Sell(data):
+
+    # 模擬 Discord 的 ctx
+    try:
+        ctx = AsyncMock()
+        ctx.send = AsyncMock()
+        await best4Sell(ctx, data)
+
+    except Exception:
+        # print error
+        print("error")
+        exit(1)
+
+async def test_ma31(data):
+
+    # 模擬 Discord 的 ctx
+    try:
+        ctx = AsyncMock()
+        ctx.send = AsyncMock()
+        await ma31(ctx, data, '10')
+
+    except Exception:
+        # print error
+        print("error")
+        exit(1)
 
 if __name__ == "__main__":
-    asyncio.run(test_fuzz())
+    afl.init()
+    data = sys.stdin.read()
+    asyncio.run(test_price(data))
+    asyncio.run(test_best4buy(data))
+    asyncio.run(test_best4Sell(data))
+    asyncio.run(test_ma31(data))
+    os._exit(0)
