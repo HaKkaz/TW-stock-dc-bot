@@ -6,5 +6,6 @@
 run the fuzz-test
 
 ```
-pytest ./src/fuzz-test.py
+chmod 777 ./src/fuzz-test.py
+py-afl-fuzz -i ./src/input -o ./src/output -- ./src/fuzz-test.py
 ```
