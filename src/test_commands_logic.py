@@ -10,6 +10,8 @@ Variables: stock
 Flow of control: stock['success'](true) -> function
 For PC、CC、CACC => 2 test cases have to be tested
 '''
+
+
 # stock['success'](true)
 @pytest.mark.asyncio
 @patch('twstock.realtime.get')
@@ -47,13 +49,15 @@ async def test_price_command_stock_true(mock_get):
 # test ma31 command
 '''
 Variables: stock_code, days
-There are two separate predicate 
+There are two separate predicate
 Flow of control: days(true) -> stock_code in twstock.codes(ture) -> function
 For PC、CC are some cases where the predicate is separated
 PC、CC、CACC: can be satisfied by testing 2 x 2 = 4 test
-Case[days(false)、stock_code in twstock.codes(false)] belongs to Case[days(false)]
+Case[days(false)、stock_code in twstock.codes(false)] belongs to [days(false)]
 4 - 1 = 3 test cases have to be tested
 '''
+
+
 # days(false)
 @pytest.mark.asyncio
 async def test_ma31_command_days_false():
@@ -96,6 +100,8 @@ Variables: stock_code
 Flow of control: stock_code(true) -> function
 For PC、CC、CACC => 2 test cases have to be tested
 '''
+
+
 # stock_code in twstock.codes(false)
 @pytest.mark.asyncio
 async def test_best4Buy_command_stock_code_false():
@@ -136,6 +142,8 @@ Variables: stock_code
 Flow of control: stock_code(true) -> function
 For PC、CC、CACC => 2 test cases have to be tested
 '''
+
+
 # stock_code in twstock.codes(false)
 @pytest.mark.asyncio
 async def test_best4Sell_command_stock_code_false():
@@ -171,8 +179,9 @@ async def test_best4Sell_command_stock_code_true(mock_bfp, mock_stock):
 
 # Test subscribe command
 '''
-Variable: folder_path_exists[A]、file_path_exists[B]、channel_id in existing_ids[C]
-Flow of control: 
+Variable:
+folder_path_exists[A]、file_path_exists[B]、channel_id in existing_ids[C]
+Flow of control:
     folder_path_exists(false):
         -> Create folder
         file_path_exists(false):
@@ -193,22 +202,29 @@ Flow of control:
 There are 3 separate predicate and only four valid path
 For PC、CC、CACC these four cases should be tested
 (they could be tested together because they are independent)
-If we took these three cases as one predicate 
-=> equal to (A and B and C): Already subscribed、Otherwise: Subscribe successfully
+If we took these three cases as one predicate
+Equal to (A and B and C):Already subscribed、Otherwise:Subscribe successfully
 What's more: (C -> B) and (B -> A)
 '''
-# Case 1: folder_path_exists(false) -> file_path_exists(false) -> channel_id in existing_ids(false)
+
+
+# Case 1: folder_path(false) -> file_path(false) -> channel_id(false)
 @pytest.mark.asyncio
 @patch("os.path.exists")
 @patch("os.makedirs")
 @patch("builtins.open", new_callable=mock_open, read_data="")
-async def test_subscribe_create_folder_and_file(mock_open, mock_makedirs, mock_exists):
+async def test_subscribe_create_folder_and_file(
+    mock_open, mock_makedirs, mock_exists
+):
+
     ctx = AsyncMock()
     ctx.channel.id = 123
     ctx.channel.name = 'test_channel'
 
     # Mock return values for os.path.exists
-    mock_exists.side_effect = lambda x: False if x in ['subscribe', os.path.join('subscribe', 'subscriber.txt')] else True
+    mock_exists.side_effect = lambda x: False if x in [
+        'subscribe', os.path.join('subscribe', 'subscriber.txt')
+        ] else True
 
     await commands.subscribe(ctx)
 
@@ -217,9 +233,10 @@ async def test_subscribe_create_folder_and_file(mock_open, mock_makedirs, mock_e
     ctx.send.assert_called_with('Subscribe successfully.')
 
 
-# Case 2: folder_path_exists(true) -> file_path_exists(false) -> channel_id in existing_ids(false)
+# Case 2: folder_path(true) -> file_path(false) -> channel_id(false)
 @pytest.mark.asyncio
-@patch("os.path.exists", side_effect=lambda x: True if x == 'subscribe' else False)
+@patch("os.path.exists",
+       side_effect=lambda x: True if x == 'subscribe' else False)
 @patch("os.makedirs")
 @patch("builtins.open", new_callable=mock_open, read_data="")
 async def test_subscribe_create_file(mock_open, mock_makedirs, mock_exists):
@@ -234,12 +251,15 @@ async def test_subscribe_create_file(mock_open, mock_makedirs, mock_exists):
     ctx.send.assert_called_with('Subscribe successfully.')
 
 
-# Case 3: folder_path_exists(true) -> file_path_exists(true) -> channel_id in existing_ids(false)
+# Case 3: folder_path(true) -> file_path(true) -> channel_id(false)
 @pytest.mark.asyncio
 @patch("os.path.exists", return_value=True)
 @patch("os.makedirs")
 @patch("builtins.open", new_callable=mock_open, read_data="")
-async def test_subscribe_channel_id_not_in_existing_ids(mock_open, mock_makedirs, mock_exists):
+async def test_subscribe_channel_id_not_in_existing_ids(
+    mock_open, mock_makedirs, mock_exists
+):
+
     ctx = AsyncMock()
     ctx.channel.id = 123
     ctx.channel.name = 'test_channel'
@@ -251,7 +271,7 @@ async def test_subscribe_channel_id_not_in_existing_ids(mock_open, mock_makedirs
     ctx.send.assert_called_with('Subscribe successfully.')
 
 
-# Case 4: folder_path_exists(true) -> file_path_exists(true) -> channel_id in existing_ids(true)
+# Case 4: folder_path(true) -> file_path(true) -> channel_id(true)
 @pytest.mark.asyncio
 @patch("os.path.exists", return_value=True)
 @patch("builtins.open", new_callable=mock_open, read_data="123\n456")
@@ -266,8 +286,9 @@ async def test_subscribe_channel_id_in_existing_ids(mock_open, mock_exists):
 
 # Test unsubscribe command
 '''
-Variable: folder_path_exists[A]、file_path_exists[B]、channel_id in existing_ids[C]
-Flow of control: 
+Variable:
+folder_path_exists[A]、file_path_exists[B]、channel_id in existing_ids[C]
+Flow of control:
     folder_path_exists(false):
         -> Create folder
         file_path_exists(false):
@@ -284,22 +305,29 @@ Flow of control:
                 -> Already unsubscribed - 3
             channel_id in existing_ids(true)
                 -> Unsubscribe successfully - 4
-There are 3 separate predicate and only four valid path (same as subscribe function)
+(same as subscribe function)
+There are 3 separate predicate and only four valid path
 For PC、CC、CACC these four cases should be tested
 (they could be tested together because they are independent)
 '''
-# Case 1: folder_path_exists(false) -> file_path_exists(false) -> channel_id in existing_ids(false)
+
+
+# Case 1: folder_path(false) -> file_path(false) -> channel_id(false)
 @pytest.mark.asyncio
 @patch("os.path.exists")
 @patch("os.makedirs")
 @patch("builtins.open", new_callable=mock_open, read_data="")
-async def test_unsubscribe_create_folder_and_file(mock_open, mock_makedirs, mock_exists):
+async def test_unsubscribe_create_folder_and_file(
+    mock_open, mock_makedirs, mock_exists
+):
     ctx = AsyncMock()
     ctx.channel.id = 123
     ctx.channel.name = 'test_channel'
 
     # Mock return values for os.path.exists
-    mock_exists.side_effect = lambda x: False if x in ['subscribe', os.path.join('subscribe', 'subscriber.txt')] else True
+    mock_exists.side_effect = lambda x: False if x in [
+        'subscribe', os.path.join('subscribe', 'subscriber.txt')
+        ] else True
 
     await commands.unsubscribe(ctx)
 
@@ -308,7 +336,7 @@ async def test_unsubscribe_create_folder_and_file(mock_open, mock_makedirs, mock
     ctx.send.assert_called_with('Already unsubscribed.')
 
 
-# Case 2: folder_path_exists(true) -> file_path_exists(false) -> channel_id in existing_ids(false)
+# Case 2: folder_path(true) -> file_path(false) -> channel_id(false)
 @pytest.mark.asyncio
 @patch("os.path.exists", side_effect=lambda x: x == 'subscribe')
 @patch("os.makedirs")
@@ -325,12 +353,14 @@ async def test_unsubscribe_create_file(mock_open, mock_makedirs, mock_exists):
     ctx.send.assert_called_with('Already unsubscribed.')
 
 
-# Case 3: folder_path_exists(true) -> file_path_exists(true) -> channel_id in existing_ids(false)
+# Case 3: folder_path(true) -> file_path(true) -> channel_id(false)
 @pytest.mark.asyncio
 @patch("os.path.exists", return_value=True)
 @patch("os.makedirs")
 @patch("builtins.open", new_callable=mock_open, read_data="")
-async def test_unsubscribe_channel_id_not_in_existing_ids(mock_open, mock_makedirs, mock_exists):
+async def test_unsubscribe_channel_id_not_in_existing_ids(
+    mock_open, mock_makedirs, mock_exists
+):
     ctx = AsyncMock()
     ctx.channel.id = 123
     ctx.channel.name = 'test_channel'
@@ -342,7 +372,7 @@ async def test_unsubscribe_channel_id_not_in_existing_ids(mock_open, mock_makedi
     ctx.send.assert_called_with('Already unsubscribed.')
 
 
-# Case 4: folder_path_exists(true) -> file_path_exists(true) -> channel_id in existing_ids(true)
+# Case 4: folder_path(true) -> file_path(true) -> channel_id(true)
 @pytest.mark.asyncio
 @patch("os.path.exists", return_value=True)
 @patch("builtins.open", new_callable=mock_open, read_data="123\n456")
